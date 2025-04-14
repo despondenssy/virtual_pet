@@ -2,7 +2,7 @@ from django import forms
 from .models import Pet
 
 class PetForm(forms.ModelForm):
-    image = forms.ChoiceField(  # переопределяем image
+    image = forms.ChoiceField(
         choices=[
             ('pet_images/cat1.png', 'Cat 1'),
             ('pet_images/cat2.jpg', 'Cat 2'),

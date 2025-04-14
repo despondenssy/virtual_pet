@@ -14,26 +14,42 @@
         <img src="/media/pet_images/cat2.jpg" alt="Default Pet Image" width="200">
     {% endif %}
 
-
-
     <p>Mood: {{ pet.get_mood_display }}</p>
-    <p>Energy: {{ pet.energy }}%</p>
-    <p>Hunger: {{ pet.hunger }}%</p>
+
+    <h3>Energy</h3>
+    <progress value="{{ pet.energy }}" max="100"></progress> {{ pet.energy }}%
+
+    <h3>Satiety</h3>
+    <progress value="{{ pet.satiety }}" max="100"></progress> {{ pet.satiety }}%
 
     <h2>Actions</h2>
-    <a href="{% url 'feed_pet' pet.id %}">Feed</a> | 
+    <a href="{% url 'play_with_pet' pet.id %}">Play</a> |
+    <a href="{% url 'pet_pet' pet.id %}">Pet</a> |
+    <a href="{% url 'feed_pet' pet.id %}">Feed</a> |
     <a href="{% url 'put_to_sleep' pet.id %}">Put to Sleep</a>
 
-    <h2>Update Pet Info</h2>
-    <a href="{% url 'delete_pet' pet.id %}">Delete</a>
-
     <hr>
-    <h3>Переименовать питомца:</h3>
+
+    <h3>Rename your pet:</h3>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Сохранить новое имя</button>
+        <button type="submit">Save New Name</button>
     </form>
+
+    <hr>
+    <h3>Action History</h3>
+    <ul>
+        {% for action in pet.actions.all|dictsortreversed:"timestamp"|slice:":7" %}
+            <li>{{ action.timestamp|date:"H:i:s d.m.Y" }} — {{ action.action }}</li>
+        {% empty %}
+            <li>No actions yet. Your pet awaits your love 🐾</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <a href="{% url 'delete_pet' pet.id %}" style="color: red;">Delete My Pet</a>
 
     <br>
     <a href="{% url 'home' %}" style="display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #eee; border: 1px solid #ccc; border-radius: 5px; text-decoration: none; color: #333;">← Back to Home</a>

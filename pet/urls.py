@@ -9,5 +9,7 @@ urlpatterns = [
     path('pet/<int:pet_id>/', views.pet_info, name='pet_info'),  # Страница просмотра и редактирования питомца
     path('feed_pet/<int:pet_id>/', views.feed_pet, name='feed_pet'),
     path('put_to_sleep/<int:pet_id>/', views.put_to_sleep, name='put_to_sleep'),
+    path('play/<int:pet_id>/', views.play_with_pet, name='play_with_pet'),
+    path('pet/<int:pet_id>/pet/', views.pet_pet, name='pet_pet'),
     path('delete/<int:pet_id>/', views.delete_pet, name='delete_pet'), # Удаление питомцев
 ]
