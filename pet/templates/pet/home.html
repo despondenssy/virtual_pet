@@ -11,7 +11,21 @@
     <h1>Welcome to the Virtual Pet App</h1>
 <p>Here is a list of pets:</p>
 
-{% if pets %}
+<div class="pets-container">
+    {% for pet in pets %}
+    <a href="{% url 'pet_info' pet.id %}" class="pet-card">
+        {% if pet.image %}
+            <img src="/media/{{ pet.image }}" alt="{{ pet.name }}">
+        {% else %}
+            <img src="/media/pet_images/cat2.jpg" alt="Default Pet Image">
+        {% endif %}
+        <h3>{{ pet.name }}</h3>
+        <p>Mood: {{ pet.mood }}</p>
+    </a>
+    {% endfor %}
+</div>
+
+<!-- {% if pets %}
     <ul>
     {% for pet in pets %}
         <li>
@@ -22,7 +36,7 @@
     </ul>
 {% else %}
     <p>No pets yet!</p>
-{% endif %}
+{% endif %} -->
 
 <br>
 <a href="{% url 'add_pet' %}">Add a Pet</a>   
