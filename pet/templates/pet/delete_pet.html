@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Pet</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pet/style.css' %}">
 </head>
 <body>
     <h1>Are you sure you want to delete the pet: {{ pet.name }}?</h1>

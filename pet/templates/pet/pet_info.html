@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ pet.name }}'s Info</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pet/style.css' %}">
 </head>
 <body>
     <h2>{{ pet.name }}</h2>
@@ -34,7 +36,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save New Name</button>
+        <button type="submit" class="save-btn">Save new name</button>
     </form>
 
     <hr>
@@ -49,7 +51,7 @@
 
     <hr>
 
-    <a href="{% url 'delete_pet' pet.id %}" style="color: red;">Delete My Pet</a>
+    <a href="{% url 'delete_pet' pet.id %}" style="color: red;">Delete my pet</a>
 
     <br>
     <a href="{% url 'home' %}" style="display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #eee; border: 1px solid #ccc; border-radius: 5px; text-decoration: none; color: #333;">← Back to Home</a>

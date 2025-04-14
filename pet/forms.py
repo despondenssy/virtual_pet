@@ -21,3 +21,9 @@ class RenamePetForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if not name.isalnum():
+            raise forms.ValidationError('Name must be alphanumeric.')
+        return name

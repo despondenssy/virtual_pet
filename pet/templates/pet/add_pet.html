@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Pet</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pet/style.css' %}">
 </head>
 <body>
     <h1>Create a New Pet</h1>
@@ -31,7 +33,7 @@
             </label>
         </div>
     
-        <button type="submit">Create Pet</button>
+        <button type="submit" class="save-btn">Create Pet</button>
     </form>
 
     <br>
