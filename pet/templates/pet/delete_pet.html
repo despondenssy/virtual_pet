@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Pet</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete the pet: {{ pet.name }}?</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+
+    <br>
+    <a href="{% url 'home' %}" style="display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #eee; border: 1px solid #ccc; border-radius: 5px; text-decoration: none; color: #333;">← Back to Home</a>
+
+</body>
+</html>

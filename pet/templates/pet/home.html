@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Virtual Pet App</h1>
+<p>Here is a list of pets:</p>
+
+{% if pets %}
+    <ul>
+    {% for pet in pets %}
+        <li>
+            <a href="{% url 'pet_info' pet.id %}"><strong>{{ pet.name }}</strong></a> - Mood: {{ pet.mood }}, Hunger: {{ pet.hunger }}, Energy: {{ pet.energy }}
+            <a href="{% url 'delete_pet' pet.id %}">Delete</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No pets yet!</p>
+{% endif %}
+
+<br>
+<a href="{% url 'add_pet' %}">Add a Pet</a>   
+</body>
+</html>

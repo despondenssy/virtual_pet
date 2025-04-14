@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Pet</title>
+</head>
+<body>
+    <h1>Create a New Pet</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        <p>
+            {{ form.name.label_tag }}<br>
+            {{ form.name }}
+        </p>
+    
+        <p><strong>Choose how your pet will look like:</strong></p>
+    
+        <div>
+            <label for="cat1">
+                <input type="radio" id="cat1" name="image" value="pet_images/cat1.png">
+                <img src="/media/pet_images/cat1.png" alt="Cat 1" style="width: 100px;">
+            </label>
+            <label for="cat2">
+                <input type="radio" id="cat2" name="image" value="pet_images/cat2.jpg">
+                <img src="/media/pet_images/cat2.jpg" alt="Cat 2" style="width: 100px;">
+            </label>
+        </div>
+    
+        <button type="submit">Create Pet</button>
+    </form>
+
+    <br>
+    <a href="{% url 'home' %}" style="display: inline-block; margin-top: 20px; padding: 10px 15px; background-color: #eee; border: 1px solid #ccc; border-radius: 5px; text-decoration: none; color: #333;">← Back to Home</a>
+
+</body>
+</html>
