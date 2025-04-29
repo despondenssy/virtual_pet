@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    image: despondenssy/3-med:latest  # Имя образа из Docker Hub
+    environment:
+      - POSTGRES_DB=default
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    ports:
+      - "8080:8080"  # Прокидываем порт приложения на локальную машину
+    restart: always  # Автоматически перезапускать приложение при сбое
+    depends_on:
+      - postgres  # Убедимся, что приложение стартует после базы данных
+
+  postgres:
+    image: postgres:15  # Официальный образ PostgreSQL
+    environment:
+      POSTGRES_DB: default  # Имя базы данных
+      POSTGRES_USER: postgres  # Имя пользователя
+      POSTGRES_PASSWORD: postgres  # Пароль пользователя
+      PGDATA: /var/lib/postgresql/data/pgdata  # Указываем место хранения данных
+    ports:
+      - "8001:5432"  # Прокидываем порт базы данных на локальную машину
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Монтируем том для данных БД
+    restart: always  # Автоматически перезапускать базу при сбое
+
+volumes:
+  postgres_data:
+    driver: local  # Создаем локальный том для хранения данныхdocker-compose up -d

@@ -33,7 +33,7 @@ def add_pet(request):
         if form.is_valid():
             pet = form.save(commit=False)
             pet.mood = 'happy'
-            pet.satiety = 0
+            pet.satiety = 75
             pet.energy = 100
             pet.save()
             return redirect('home')
