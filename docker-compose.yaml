@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   app:
     image: despondenssy/3-med:latest  # Имя образа из Docker Hub
@@ -14,6 +12,7 @@ services:
     restart: always  # Автоматически перезапускать приложение при сбое
     depends_on:
       - postgres  # Убедимся, что приложение стартует после базы данных
+      - keydb     # Также подождем KeyDB
 
   postgres:
     image: postgres:15  # Официальный образ PostgreSQL
@@ -28,6 +27,18 @@ services:
       - postgres_data:/var/lib/postgresql/data  # Монтируем том для данных БД
     restart: always  # Автоматически перезапускать базу при сбое
 
+  keydb:
+    image: eqalpha/keydb:x86_64_v5.3.3  # Официальный образ KeyDB
+    container_name: keydb
+    command: "keydb-server /etc/keydb/redis.conf --server-threads 2"
+    volumes:
+      - keydb_data:/data  # Монтируем том для данных KeyDB
+    ports:
+      - "6379:6379"  # Прокидываем порт KeyDB на локальную машину
+    restart: always  # Автоматически перезапускать KeyDB при сбое
+
 volumes:
   postgres_data:
-    driver: local  # Создаем локальный том для хранения данныхdocker-compose up -d
+    driver: local  # Создаем локальный том для хранения данных PostgreSQL
+  keydb_data:
+    driver: local  # Создаем локальный том для хранения данных KeyDB

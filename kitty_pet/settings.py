@@ -134,3 +134,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Пути для медиа файлов
 MEDIA_URL = '/media/'  # Публичный URL для доступа к файлам
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Путь к папке на сервере
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://keydb:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {  # выводим логи в консоль
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'pet.utils': {  # логгер для модуля utils.py
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
