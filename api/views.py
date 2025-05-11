@@ -1,11 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from pet.models import PetAction
+from pet.models import Pet, PetAction
 from .serializers import PetSerializer
-from pet.utils import get_pet_from_cache, set_pet_to_cache
+from pet.utils import get_pet_from_cache, set_pet_to_cache, invalidate_pet_cache
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class PetInfoAPI(APIView):
+    @swagger_auto_schema(responses={200: PetSerializer, 404: 'Pet not found'})
     def get(self, request, pet_id, format=None):
         pet = get_pet_from_cache(pet_id)
         if not pet:
@@ -17,8 +20,35 @@ class PetInfoAPI(APIView):
         
         serializer = PetSerializer(pet)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class CreatePetAPI(APIView):
+    @swagger_auto_schema(request_body=PetSerializer, responses={201: PetSerializer})
+    def post(self, request, format=None):
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            pet = serializer.save(mood='happy', satiety=75, energy=100)
+            return Response(PetSerializer(pet).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class DeletePetAPI(APIView):
+    @swagger_auto_schema(responses={204: 'Pet deleted successfully', 404: 'Pet not found'})
+    def delete(self, request, pet_id, format=None):
+        try:
+            pet = Pet.objects.get(id=pet_id)
+        except Pet.DoesNotExist:
+            return Response({"detail": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        invalidate_pet_cache(pet_id)
+        pet.delete()
+        return Response({"detail": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 class FeedPetAPI(APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'action': openapi.Schema(type=openapi.TYPE_STRING)
+        }
+    ), responses={200: 'Pet fed successfully'})
     def post(self, request, pet_id, format=None):
         pet = get_pet_from_cache(pet_id)
         if not pet:
@@ -30,12 +60,13 @@ class FeedPetAPI(APIView):
         pet.mood = 'happy'
         pet.save()
 
-        PetAction.objects.create(pet=pet, action="Fed the pet")
+        PetAction.objects.create(pet=pet, action=request.data.get('action', "Fed the pet"))
         set_pet_to_cache(pet)
 
         return Response({"detail": "Pet fed successfully"}, status=status.HTTP_200_OK)
 
 class PutToSleepAPI(APIView):
+    @swagger_auto_schema(responses={200: 'Pet put to sleep successfully', 404: 'Pet not found'})
     def post(self, request, pet_id, format=None):
         pet = get_pet_from_cache(pet_id)
         if not pet:
@@ -52,6 +83,12 @@ class PutToSleepAPI(APIView):
         return Response({"detail": "Pet put to sleep successfully"}, status=status.HTTP_200_OK)
 
 class PlayWithPetAPI(APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'action': openapi.Schema(type=openapi.TYPE_STRING)
+        }
+    ), responses={200: 'Pet played with successfully', 404: 'Pet not found'})
     def post(self, request, pet_id, format=None):
         pet = get_pet_from_cache(pet_id)
         if not pet:
@@ -62,12 +99,18 @@ class PlayWithPetAPI(APIView):
         pet.mood = "Playful"
         pet.save()
 
-        PetAction.objects.create(pet=pet, action="Played with pet")
+        PetAction.objects.create(pet=pet, action=request.data.get('action', "Played with pet"))
         set_pet_to_cache(pet)
 
         return Response({"detail": "Pet played with successfully"}, status=status.HTTP_200_OK)
 
 class PetPetAPI(APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'action': openapi.Schema(type=openapi.TYPE_STRING)
+        }
+    ), responses={200: 'Pet petted successfully', 404: 'Pet not found'})
     def post(self, request, pet_id, format=None):
         pet = get_pet_from_cache(pet_id)
         if not pet:
@@ -77,7 +120,7 @@ class PetPetAPI(APIView):
         pet.mood = "Happy"
         pet.save()
 
-        PetAction.objects.create(pet=pet, action="Petted the pet")
+        PetAction.objects.create(pet=pet, action=request.data.get('action', "Petted the pet"))
         set_pet_to_cache(pet)
 
         return Response({"detail": "Pet petted successfully"}, status=status.HTTP_200_OK)

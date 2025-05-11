@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   app:
     image: despondenssy/3-med:latest  # Имя образа из Docker Hub
