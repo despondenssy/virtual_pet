@@ -22,4 +22,4 @@ COPY . /app/
 EXPOSE 8080
 
 # Запускаем сервер
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8080"]

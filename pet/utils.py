@@ -4,7 +4,7 @@ from .models import Pet
 
 logger = logging.getLogger(__name__)  # Создаём логгер
 
-CACHE_TIMEOUT = 60 * 5  # 5 минут
+CACHE_TIMEOUT = 60
 
 # Получение питомца из кэша (или из БД, если кэш пуст)
 def get_pet_from_cache(pet_id):

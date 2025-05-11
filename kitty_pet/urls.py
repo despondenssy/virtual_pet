@@ -19,10 +19,26 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from pet import views
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+# Настройка Swagger
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Virtual Pet API",
+        default_version='v1',
+        description="API for interacting with virtual pets",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pet.urls')),  # Подключаем URL-ы приложения pet
+    path('api/', include('api.urls')),  # Подключаем API-приложение
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # Добавляем Swagger
 ]
 
 if settings.DEBUG:

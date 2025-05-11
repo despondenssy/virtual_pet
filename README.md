@@ -26,5 +26,5 @@ This is a simple web application where you can interact with virtual pets. You c
 
 
 ## Usage
-- Go to `http://localhost:8000` to interact with your virtual pet.
+- Go to `http://localhost:8080` to interact with your virtual pet.
 - You can add, feed, play with, and delete pets.

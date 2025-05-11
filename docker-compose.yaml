@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   app:
     image: despondenssy/3-med:latest  # Имя образа из Docker Hub
@@ -13,6 +15,8 @@ services:
     depends_on:
       - postgres  # Убедимся, что приложение стартует после базы данных
       - keydb     # Также подождем KeyDB
+    volumes:
+      - .:/app  # Подключаем текущую папку как volume
 
   postgres:
     image: postgres:15  # Официальный образ PostgreSQL
