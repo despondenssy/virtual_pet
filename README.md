@@ -6,13 +6,24 @@ This is a simple web application where you can interact with virtual pets. You c
 - Python
 - Django
 - HTML/CSS
+- PostgreSQL
+- Redis (KeyDB)
+- Docker / Docker Compose
 
 ## Installation
-1. Clone the repository: `git clone https://github.com/despondenssy/virtual_pet.git`
-2. Navigate to the project directory: `cd virtual_pet`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Run migrations: `python manage.py migrate`
-5. Start the development server: `python manage.py runserver`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/despondenssy/virtual_pet.git
+   cd virtual_pet
+2. Build and start the application:
+   ```bash
+   docker compose up --build -d
+3. The application will be available at:
+    `http://localhost:8080`
+4. To view logs:
+   ```bash
+   docker compose logs -f app
+
 
 ## Usage
 - Go to `http://localhost:8000` to interact with your virtual pet.
