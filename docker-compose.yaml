@@ -39,6 +39,17 @@ services:
       - "6379:6379"  # Прокидываем порт KeyDB на локальную машину
     restart: always  # Автоматически перезапускать KeyDB при сбое
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"        # порт для взаимодействия с приложениями
+      - "15672:15672"      # порт для UI панели
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: always
+
 volumes:
   postgres_data:
     driver: local  # Создаем локальный том для хранения данных PostgreSQL

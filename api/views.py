@@ -6,6 +6,7 @@ from .serializers import PetSerializer
 from pet.utils import get_pet_from_cache, set_pet_to_cache, invalidate_pet_cache
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from messaging.producer import send_event
 
 class PetInfoAPI(APIView):
     @swagger_auto_schema(responses={200: PetSerializer, 404: 'Pet not found'})
@@ -27,6 +28,14 @@ class CreatePetAPI(APIView):
         serializer = PetSerializer(data=request.data)
         if serializer.is_valid():
             pet = serializer.save(mood='happy', satiety=75, energy=100)
+
+            # Отправка события
+            send_event(
+                exchange_name='group3.21.direct',
+                routing_key='group3.21.routing.key',
+                message=f"Create: Pet {pet.id} — {pet.name}"
+            )
+
             return Response(PetSerializer(pet).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -39,6 +48,14 @@ class DeletePetAPI(APIView):
             return Response({"detail": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
 
         invalidate_pet_cache(pet_id)
+
+        # Отправка события
+        send_event(
+            exchange_name='group3.21.direct',
+            routing_key='group3.21.routing.key',
+            message=f"Delete: Pet {pet.id} — {pet.name}"
+        )
+        
         pet.delete()
         return Response({"detail": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -63,6 +80,13 @@ class FeedPetAPI(APIView):
         PetAction.objects.create(pet=pet, action=request.data.get('action', "Fed the pet"))
         set_pet_to_cache(pet)
 
+        # Отправка события
+        send_event(
+            exchange_name='group3.21.direct',
+            routing_key='group3.21.routing.key',
+            message=f"Feed: Pet {pet.id} — {pet.name}"
+        )
+
         return Response({"detail": "Pet fed successfully"}, status=status.HTTP_200_OK)
 
 class PutToSleepAPI(APIView):
@@ -79,6 +103,13 @@ class PutToSleepAPI(APIView):
 
         PetAction.objects.create(pet=pet, action="Put the pet to sleep")
         set_pet_to_cache(pet)
+
+        # Отправка события
+        send_event(
+            exchange_name='group3.21.direct',
+            routing_key='group3.21.routing.key',
+            message=f"Sleep: Pet {pet.id} — {pet.name}"
+        )
 
         return Response({"detail": "Pet put to sleep successfully"}, status=status.HTTP_200_OK)
 
@@ -102,6 +133,13 @@ class PlayWithPetAPI(APIView):
         PetAction.objects.create(pet=pet, action=request.data.get('action', "Played with pet"))
         set_pet_to_cache(pet)
 
+        # Отправка события
+        send_event(
+            exchange_name='group3.21.direct',
+            routing_key='group3.21.routing.key',
+            message=f"Play: Pet {pet.id} — {pet.name}"
+        )
+
         return Response({"detail": "Pet played with successfully"}, status=status.HTTP_200_OK)
 
 class PetPetAPI(APIView):
@@ -122,5 +160,12 @@ class PetPetAPI(APIView):
 
         PetAction.objects.create(pet=pet, action=request.data.get('action', "Petted the pet"))
         set_pet_to_cache(pet)
+
+        # Отправка события
+        send_event(
+            exchange_name='group3.21.direct',
+            routing_key='group3.21.routing.key',
+            message=f"Pet: Pet {pet.id} — {pet.name}"
+        )
 
         return Response({"detail": "Pet petted successfully"}, status=status.HTTP_200_OK)
