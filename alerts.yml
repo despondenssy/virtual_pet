@@ -1,0 +1,42 @@
+groups:
+  - name: pet-api-alerts
+    rules:
+      - alert: HighPetActionDuration
+        expr: rate(pet_action_duration_seconds_sum[5m]) / rate(pet_action_duration_seconds_count[5m]) > 1.5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High average duration for pet actions"
+          description: "Average duration of pet actions exceeded 1.5 seconds over the past minute."
+
+      - alert: LowEnergyLevelDetected
+        expr: pet_energy_level < 20
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pet energy level is critically low"
+          description: "Detected pets with energy level below 20."
+
+  - name: messaging-alerts
+    rules:
+      - alert: RabbitMQQueueTooLong
+        expr: rabbitmq_queue_messages_ready > 8
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Message queue is getting too long"
+          description: "The queue has more than 8 messages ready for delivery. Potential consumer lag."
+
+  - name: total-pet-actions
+    rules:
+      - alert: TooManyPetActions
+        expr: increase(pet_actions_total[5m]) > 20
+        for: 30s
+        labels:
+          severity: info
+        annotations:
+          summary: "High volume of pet interactions"
+          description: "More than 20 pet actions recorded in the last 5 minutes. That's a lot!"
