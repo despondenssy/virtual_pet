@@ -39,6 +39,7 @@ urlpatterns = [
     path('', include('pet.urls')),  # Подключаем URL-ы приложения pet
     path('api/', include('api.urls')),  # Подключаем API-приложение
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # Добавляем Swagger
+    path('cqrs/', include('cqrs_service.urls')),
 ]
 
 if settings.DEBUG:
